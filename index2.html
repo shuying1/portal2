@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta name="referrer" content="no-referrer">
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>门户系统 - 财务服务公司</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "SourceSansPro-Regular", "微软雅黑";
+            overflow-x: hidden;
+        }
+
+        /* 轮播图样式 */
+        .carousel-container {
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 顶部导航栏样式 */
+        .header {
+            position: fixed;
+            top: 10px;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            /* background: linear-gradient(to bottom, rgba(165, 164, 164, 0.2), rgba(235, 239, 247, 0.1)); */
+            /* box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15); */
+            transition: all 0.3s ease;
+        }
+
+
+        .top-bar {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            height: 75px;
+            max-width: 1400px;
+            margin: 0 auto;
+
+        }
+
+        .logo {
+            /* position: fixed; */
+            top: 15px;
+            left: 30px;
+            display: flex;
+            align-items: flex-start;
+            /* 垂直顶部对齐 */
+            justify-content: flex-start;
+            height: 80px;
+            z-index: 1001;
+            gap: 35px;
+            /* 元素间间距 */
+
+        }
+
+        .logo-img-container {
+            position: fixed;
+            top: 10px;
+            left: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 70px;
+            width: 280px;
+            border-bottom: 4px solid #051df7;
+            /* 添加蓝色下边框线 */
+        }
+
+        .company-name {
+            color: black;
+            font-size: 21px;
+            font-weight: 540;
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            margin: 0;
+            white-space: nowrap;
+            /* 防止换行 */
+        }
+
+        .logo-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            margin: 0;
+            align-self: flex-end;
+            /* 右侧对齐 */
+        }
+
+        /* 主导航菜单 */
+        .nav-menu {
+            display: flex;
+
+            list-style: none;
+            height: 100%;
+            margin-left: auto;
+        }
+
+        .nav-menu li {
+            position: relative;
+        }
+
+        .nav-menu>li>a {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 550;
+            padding: 30px 18px;
+            display: flex;
+            align-items: center;
+            height: 80px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu>li>a:hover {
+            color: #051df7d5;
+            /* text-shadow: 0 0 8px rgba(255, 255, 255, 0.8); */
+        }
+
+        /* 移除active状态的蓝色效果 */
+        /*
+        .nav-menu>li>a:hover,
+        .nav-menu>li>a.active {
+            color: #051df7;
+        }
+        */
+
+        /* T字形连接线 - 垂直线 */
+        /* .dropdown:hover::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 15px;
+            background-color: #051df7;
+            z-index: 1001;
+        } */
+
+        /* 二级导航下拉菜单 */
+        .dropdown-content {
+            position: absolute;
+            top: calc(90%);
+            left: 50%;
+            text-align: center;
+            transform: translateX(-50%) translateY(-10px);
+            background-color: rgba(255, 255, 255, 0.98);
+            min-width: 250px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            border-radius: 8px;
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            border-top: 3px solid #051df7d5;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* T字形连接线 - 二级菜单顶部的横线 */
+        /* .dropdown-content::before {
+            content: '';
+            position: absolute;
+
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: #16db37;
+        } */
+
+        .dropdown:hover .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .dropdown-content a {
+            color: #555;
+            padding: 16px 24px;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            transition: all 0.25s ease;
+            border-left: 4px solid transparent;
+            font-size: 15px;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a i {
+            margin-right: 10px;
+            width: 18px;
+            text-align: center;
+            color: #888;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-content a:hover {
+            background-color: rgba(18, 65, 204, 0.05);
+            color: #1343d1;
+            border-left-color: #1c46c4;
+            /* padding-left: 30px; */
+        }
+
+        .dropdown-content a:hover i {
+            color: #1043db;
+            transform: translateX(3px);
+        }
+
+        /* 下拉菜单小箭头指示器 - 移除旋转效果 */
+        .dropdown>a:after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 12px;
+            margin-left: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            transition: color 0.3s ease;
+        }
+
+        .dropdown:hover>a:after {
+            color: #0a2fd3;
+            /* 指示箭头翻转 */
+            transform: rotate(180deg);
+        }
+
+        /* 轮播图样式保持不变 */
+        .carousel-slides {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+            /* 确保图片随滚动行为正常 */
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* 添加这些属性确保完美居中 */
+            object-fit: cover;
+            transform: translateZ(0);
+            /* 启用硬件加速 */
+        }
+
+        /* 蓝色蒙版效果 */
+        .carousel-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(13, 90, 233, 0.2);
+            z-index: 1;
+        }
+
+        .slide-content {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            color: white;
+            max-width: 600px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+
+        .slide-title {
+            font-size: 48px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .slide-desc {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .slide-btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            color: white;
+            background-color: #051df7;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .slide-btn:hover {
+            background-color: #0314c4;
+        }
+
+        /* 指示器样式 */
+        .carousel-indicators {
+            position: absolute;
+            bottom: 40px;
+            right: 100px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .indicator {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .indicator.active {
+            background: white;
+            transform: scale(1.2);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* 针对特定图片的优化 */
+        .carousel-slide[style*="图片 1.png"],
+        .carousel-slide[style*="图片 2.png"] {
+            background-position: center center !important;
+            background-size: cover !important;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .top-bar {
+                padding: 0 25px;
+            }
+
+            .nav-menu>li>a {
+                padding: 30px 14px;
+                font-size: 16px;
+            }
+
+            .slide-content {
+                left: 50px;
+                bottom: 80px;
+            }
+
+            .slide-title {
+                font-size: 36px;
+            }
+
+            .carousel-indicators {
+                right: 50px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .top-bar {
+                padding: 0 20px;
+            }
+
+            .logo-text {
+                font-size: 20px;
+            }
+
+            .nav-menu>li>a {
+                padding: 30px 10px;
+                font-size: 15px;
+            }
+
+            .dropdown-content {
+                min-width: 200px;
+            }
+
+            .slide-content {
+                left: 30px;
+                bottom: 60px;
+                max-width: 80%;
+                padding: 20px;
+            }
+
+            .slide-title {
+                font-size: 30px;
+            }
+
+            .slide-desc {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .carousel-container {
+                height: 350px;
+            }
+
+            .carousel-slide {
+                background-position: center center;
+                background-size: cover;
+            }
+
+            /* 移动端进一步优化 */
+            .carousel-slide[style*="图片"] {
+                background-position: center center !important;
+            }
+
+            .carousel-indicators {
+                bottom: 15px;
+                right: 20px;
+            }
+
+            .slide-title {
+                font-size: 32px;
+            }
+
+            .slide-desc {
+                font-size: 16px;
+            }
+
+            .slide-content {
+                bottom: 30px;
+                left: 30px;
+                max-width: 80%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .carousel-container {
+                height: 280px;
+            }
+
+            .carousel-slide {
+                background-position: center center;
+                background-size: cover;
+            }
+
+            .carousel-slide[style*="图片"] {
+                background-position: center center !important;
+            }
+
+            .carousel-indicators {
+                bottom: 12px;
+                right: 15px;
+                gap: 8px;
+            }
+
+            .indicator {
+                width: 12px;
+                height: 12px;
+            }
+
+            .slide-title {
+                font-size: 28px;
+            }
+
+            .slide-desc {
+                font-size: 14px;
+            }
+
+            .slide-content {
+                bottom: 20px;
+                left: 20px;
+                max-width: 85%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 全屏轮播图，导航栏嵌入其中 -->
+    <div class="carousel-container">
+        <!-- 顶部导航栏 -->
+        <header class="header" id="mainHeader">
+            <div class="top-bar">
+                <div class="logo">
+                    <div class="logo-img-container">
+                        <!-- <img src="./images/logo.png" alt="财务服务公司logo"> -->
+                        <img class="logo"
+                            src="https://cdn.nlark.com/yuque/0/2026/png/12676018/1767599316566-15aefeeb-f8ef-4007-9f22-deb05ac7fea3.png"
+                            alt="系统Logo" />
+                        <p class="company-name">财务共享智能BI服务平台</p>
+                    </div>
+
+                </div>
+
+                <ul class="nav-menu">
+
+                    <li class="dropdown"><a class="nav-item">资金管理</a>
+                        <div class="dropdown-content">
+                            <a href="otherSystem/usb_key.html">网银盾管理</a>
+                            <a href="">矿山基金管理（待部署）</a>
+                            <a href="#">银行账户管理（待部署）</a>
+                        </div>
+                    </li>
+                    <li class="dropdown"><a class="nav-item">应收管理</a>
+                        <div class="dropdown-content">
+                            <a href="otherSystem/accounts_receivable.html">应收账款管理</a>
+                            <a href="otherSystem/supply_chain_finance_products.html">供应链金融产品</a>
+                            <a href="#">授信评级管理（待部署）</a>
+                        </div>
+                    </li>
+                    <li class="dropdown"><a class="nav-item">往来管理</a>
+                        <div class="dropdown-content">
+                            <a href="otherSystem/advance_payment.html">预付账款管理</a>
+                            <a href="otherSystem/other_receivables.html">其他应收管理 </a>
+                            <a href="#">两金压降进度跟踪（待部署）</a>
+                        </div>
+                    </li>
+                    <li class="dropdown"><a class="nav-item">资产管理</a>
+                        <div class="dropdown-content">
+                            <a href="otherSystem/asset_management.html"> 闲置资产管理</a>
+                    
+                            <a href="#"> 工程统计报表（待部署）</a>
+                        </div>
+                    </li>
+                    <li class="dropdown"><a class="nav-item">费用管理</a>
+                        <div class="dropdown-content">
+                            <a href="#"> 费用预算进度（待部署）</a>
+                            <a href="#">费用智能分析（待部署）</a>
+
+                        </div>
+                    </li>
+                    <li class="dropdown"><a class="nav-item">税务管理</a>
+                        <div class="dropdown-content">
+                            <a href="#"> 税源管理系统（待部署）</a>
+                            <a href="#"> 财税补贴统计（待部署）</a>
+                            <a href="#"> 税务稽查协同（待部署）</a>
+
+                        </div>
+                    </li>
+                    <li class="dropdown"><a class="nav-item">成本管理</a>
+                        <div class="dropdown-content">
+                            <a href="#">成本压降进度（待部署）</a>
+                            <a href="#"> 成本对标管理（待部署）</a>
+                            <a href="#">成本智能分析（待部署）</a>
+                            <a href="#">优秀经验分享（待部署）</a>
+
+                        </div>
+                    </li>
+                    <li class="dropdown"><a class="nav-item">区域报表</a>
+                        <div class="dropdown-content">
+                            <a href="#">XX区域管理报表（待部署）</a>
+
+
+                        </div>
+                    </li>
+
+                    <li class="dropdown"><a class="nav-item">综合支持</a>
+                        <div class="dropdown-content">
+                            <a href="https://im.yungongplat.com/weboffice/l/somxmewhiu6ZW">财务通讯录</a>
+                            <a href="https://im.yungongplat.com/weboffice/l/somxmA0EzarP9 ">系统使用及培训</a>
+                            <a href="#"> AI助理（待部署）</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+        <div class="carousel-slides">
+
+            <div class="carousel-slide"
+                style="background-image:  url('https://www.chinaconch.com/images/bj1-20251219.jpg  ');">
+
+            </div>
+            <div class="carousel-slide"
+                style="background-image: url('https://www.chinaconch.com/images/bj2-20251225.jpg  ');">
+
+            </div>  
+             <div class="carousel-slide"
+                style="background-image: url('./img/zhixiang.png ');">
+
+            </div>
+            
+
+
+        </div>
+
+        <div class="carousel-indicators">
+            <div class="indicator active"></div>
+            <div class="indicator"></div>
+            <div class="indicator"></div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 轮播图功能
+            const carouselSlides = document.querySelector('.carousel-slides');
+            const indicators = document.querySelectorAll('.indicator');
+            const slides = document.querySelectorAll('.carousel-slide');
+            const header = document.getElementById('mainHeader');
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+
+            // 自动轮播
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                updateCarousel();
+            }
+
+            function updateCarousel() {
+                carouselSlides.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+                // 更新指示器
+                indicators.forEach((indicator, index) => {
+                    indicator.classList.toggle('active', index === currentSlide);
+                });
+            }
+
+            // 指示器点击事件
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    currentSlide = index;
+                    updateCarousel();
+                });
+            });
+
+            // 导航菜单点击事件
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    // 移动端处理下拉菜单切换
+                    if (window.innerWidth <= 768) {
+                        const dropdown = this.parentElement;
+                        if (dropdown.classList.contains('dropdown')) {
+                            e.stopPropagation();
+                            dropdown.classList.toggle('active');
+                            return;
+                        }
+                    }
+
+                    // 移除所有active类，保持白色状态
+                    document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
+                    // 不再添加active类到当前元素
+
+                    // 获取链接地址并在新窗口/标签页中打开
+                    const href = this.getAttribute('href');
+                    if (href && href !== '#') {
+                        window.open(href, '_blank');
+                    }
+                });
+            });
+
+            // 为所有二级菜单项添加独立的点击事件处理
+            document.querySelectorAll('.dropdown-content a').forEach(item => {
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // 获取链接地址并在新窗口/标签页中打开
+                    const href = this.getAttribute('href');
+                    if (href && href !== '#') {
+                        window.open(href, '_blank');
+                    }
+                });
+            });
+
+            // 点击页面其他区域关闭移动端下拉菜单
+            document.addEventListener('click', function (e) {
+                if (window.innerWidth <= 768) {
+                    if (!e.target.closest('.dropdown')) {
+                        document.querySelectorAll('.dropdown').forEach(dropdown => {
+                            dropdown.classList.remove('active');
+                        });
+                    }
+                }
+            });
+
+            // 滚动时改变导航栏样式
+            window.addEventListener('scroll', function () {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // 轮播图自动播放控制
+            let autoPlayInterval;
+            function startAutoPlay() {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = setInterval(nextSlide, 6000); // 每5秒切换一次
+            }
+
+            // 初始化自动播放
+            startAutoPlay();
+
+            // 窗口失去焦点时暂停，获得焦点时恢复（可选功能）
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    clearInterval(autoPlayInterval);
+                } else {
+                    startAutoPlay();
+                }
+            });
+
+            // 为所有下拉菜单项添加点击事件
+            // document.querySelectorAll('.dropdown-content a').forEach(item => {
+            //     item.addEventListener('click', function(e) {
+            //         e.preventDefault();
+            //         // 在实际应用中，这里可以添加页面跳转逻辑
+            //         console.log('导航到:', this.textContent);
+
+            //         // 模拟页面跳转
+            //         alert('跳转到: ' + this.textContent);
+            //     });
+            // });
+        });
+    </script>
+</body>
+
+</html>
